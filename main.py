@@ -90,7 +90,7 @@ def install_version():
     distro = None
     while distro is None:
         try:
-            distro = int(input(f'Enter your Distro\n1) Debian\n2)Ubuntu\n-> : '))
+            distro = int(input(f'Enter your Distro\n1) Debian\n2) Ubuntu\n-> : '))
         except ValueError:
             distro = None
             clear_console()
@@ -106,7 +106,7 @@ def install_version():
         update_repo_php_debian()
     elif distro == DISTRO_OPTIONS['ubuntu']:
         update_repo_php_ubuntu()
-    os.system(f'sudo apt install php{version}')
+    os.system(f'sudo apt install php{version} php{version}-zip php{version}-xmlrpc php{version}-xml php{version}-readline php{version}-opcache php{version}-mysql php{version}-mbstring php{version}-json php{version}-intl php{version}-gd php{version}-fpm php{version}-curl php{version}-common php{version}-cli php{version}-bcmath')
     print_message('*** Finished ***', 'success')
 
 def get_all_versions(path_file, in_list = False):
