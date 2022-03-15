@@ -4,6 +4,10 @@ from getpass import getuser
 from colorama import Fore, Style
 
 LAST_VERSION = 8.1
+DISTRO_OPTIONS = {
+    'debian': 1,
+    'ubuntu': 2
+}
 
 def float_range(start, stop, step):
     while start < stop:
@@ -68,7 +72,7 @@ def sync_versions():
         clear_console()
         print_message("*** You haven't installed any PHP version in your system ***", "error")
 
-def update_repo_php():
+def update_repo_php_debian():
     if os.path.exists('/etc/apt/sources.list.d/php-change-verions-script.list') is False:
         os.system('sudo apt update')
         os.system('sudo apt install software-properties-common ca-certificates lsb-release apt-transport-https')
@@ -76,8 +80,21 @@ def update_repo_php():
         os.system('wget -qO - https://packages.sury.org/php/apt.gpg | sudo apt-key add - ')
         os.system('sudo apt update ')
 
+def update_repo_php_ubuntu():
+    os.system('sudo apt update')
+    os.system('sudo add-apt-repository ppa:ondrej/php')
+    os.system('sudo apt update')
+
 def install_version():
     version = None
+    distro = None
+    while distro is None:
+        try:
+            distro = int(input(f'Enter your Distro\n1) Debian\n2)Ubuntu\n-> : '))
+        except ValueError:
+            distro = None
+            clear_console()
+            print_message("***Invalid Option! Try again***", 'error')
     while version is None:
         try:
             version = float(input(f'Enter the version ({LAST_VERSION}): ' or LAST_VERSION))
@@ -85,7 +102,10 @@ def install_version():
             version = None
             clear_console()
             print_message("***Invalid Option! Try again***", 'error')
-    update_repo_php()
+    if distro == DISTRO_OPTIONS['debian']:
+        update_repo_php_debian()
+    elif distro == DISTRO_OPTIONS['ubuntu']:
+        update_repo_php_ubuntu()
     os.system(f'sudo apt install php{version}')
     print_message('*** Finished ***', 'success')
 
